@@ -22,13 +22,6 @@ Coronacast is a probabilistic programming method for time-series forecasting of 
 
 ### What?
 
-
-# Bayesian fitting and evaluation of the fit - plots the results
-# for daily new cases counts
-# can first plot the country data in logarithmic or linear scale to identify right datarange plot_country()
-# the fitting routine is fit_mc() - one parameter is the modeltype
-# which is either exponential "exp" or polynomial "polyN" where N is the number for the order of the polynomial to fit
-
 Coronacaster is an easy-to-use interface for performing a bayesian experiment to predict COVID-19 cases in any country. Typically you will follow three simple steps:
 
 1) Plot country's cases and deaths as reference
