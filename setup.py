@@ -6,7 +6,7 @@ Coronacast provides a simple interface for performing time-series forecasting
 for COVID-19 cases using bayesian models.
 """
 
-DISTNAME = 'Coronacast'
+DISTNAME = 'Coronacaster'
 MAINTAINER = 'Mikko Kotila'
 MAINTAINER_EMAIL = 'mailme@mikkokotila.com'
 URL = 'http://autonom.io'
@@ -39,7 +39,7 @@ if __name__ == "__main__":
           version=VERSION,
           download_url=DOWNLOAD_URL,
           install_requires=install_requires,
-          packages=['coronacast'],
+          packages=['coronacaster'],
 
           classifiers=['Intended Audience :: Science/Research',
                        'Programming Language :: Python :: 3.6',
