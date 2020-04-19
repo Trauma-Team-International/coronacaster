@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="http://autonom.io"><img src="https://raw.githubusercontent.com/autonomio/coronacaster/assets/master/coronacaster_logo.png" alt="CoronaCaster" width="250"></a>
+  <a href="http://autonom.io"><img src="https://raw.githubusercontent.com/autonomio/coronacaster/master/assets/coronacaster_logo.png" alt="CoronaCaster" width="250"></a>
   <br>
 </h1>
 
