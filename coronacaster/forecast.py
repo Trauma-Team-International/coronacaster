@@ -44,8 +44,6 @@ def forecast(country,
     if enddate == None:
         enddate = temp[temp.cases > 0].dates.dt.date.max()
     
-    print('date range: ', startdate, enddate)
-    
     temp_new = temp[(temp.dates.dt.date>=startdate) & (temp.dates.dt.date<=enddate)]
 
     try:
@@ -55,8 +53,6 @@ def forecast(country,
 
     x = x0.dt.days
     y = temp_new.cases.cumsum().values
-
-    print('Number of data points: ', x.shape[0])  # , y.shape[0])
 
     log = 'lin'
     
@@ -69,7 +65,6 @@ def forecast(country,
         model, varnames, modelfun = poly_model(x, y, order, **kwargs)
     
     else:
-        print('undefined model - %s'%type)
         return None
 
     with model:
@@ -77,10 +72,8 @@ def forecast(country,
         trace = pm.sample(samples, step=step)  # , step, tune=2500, cores=10)
 
     varstats = []
-    print()
     for va in varnames + ['sigma']:
         stats = calculateStats(trace[va])  # mean 2, std 3, 20% 5, 80% 7
-        print('model variable  "%s"  has mean:'%va, stats[2], ', std:', stats[3], ', 20%-80%:', stats[5:8:2])
         varstats.append([stats[2], stats[3], stats[5], stats[7]])
 
     sigma = sum(calculateStats(trace['sigma'])[2:4])  # mean + std
@@ -89,7 +82,12 @@ def forecast(country,
                 '%s to %s'%(datetime.datetime.strftime(startdate, '%d.%m.%Y'),
                             datetime.datetime.strftime(enddate, '%d.%m.%Y')),
                 'cumulative cases']
-    modelfit_eval(y, x, modelfun, varstats[0:-1], sigma=sigma,
-                                plotstrs=plotstrs, log=log, varnames=varnames)
+    df = modelfit_eval(y, x,
+                       modelfun,
+                       varstats[0:-1],
+                       sigma=sigma,
+                       plotstrs=plotstrs,
+                       log=log,
+                       varnames=varnames)
 
-    return trace
+    return df

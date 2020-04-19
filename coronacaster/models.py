@@ -9,7 +9,7 @@ def exp_model(x, y, expo=[0.7, 2], slope=[5, 10], intercept=[0, 30], sigma0=20):
     :param sigma0: the variation of the result
     :return:  returns the model to fit_mc() and list of model parameter names as strings and model function
     """
-    print('Exponential fit \n args: intercept, slope, expo')
+    #print('Exponential fit \n args: intercept, slope, expo')
 
     import pymc3 as pm
     import numpy as np
@@ -71,6 +71,9 @@ def poly_model(x, y, order, intercept=[0, 20], sigma0=30, **kwargs):
             argvals.append(isinargs)
         # print(aN, '=', argvals[-1])
 
+
+    '''
+
     if order == 1:
         print('1st-order polynomial fit \n args: intercept,', args)
     elif order == 0:
@@ -79,6 +82,8 @@ def poly_model(x, y, order, intercept=[0, 20], sigma0=30, **kwargs):
         print('2nd-order polynomial fit \n args: intercept', args)
     else:
         print('%dth-order polynomial fit \n args: intercept,'%order, args)
+
+    '''
 
     with pm.Model() as poly_m:  # or exp_model = pm.Model()
         # model y ~ a1*x + a2*x**2 + a3*x**3 +.. + intercept

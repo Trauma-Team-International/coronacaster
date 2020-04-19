@@ -14,45 +14,49 @@ def plot_country(country, data, log='lin', end=None, start=None, limit=0):
     
     import matplotlib.pyplot as plt
     import matplotlib.ticker as ticker
+    import seaborn as sns
 
     if country=='all' or country=='World' or len(country)==0:
         temp = data.sort_values('dates')
     else:
         temp = data[data.countries == country].sort_values('dates')
-    if temp.shape[0]==0:  # check that country exists in data
-        print('Country %s not found in data'%country)
-        # countries = temp.countriesAndTerritories.unique()
-        print(sorted(data.countries.unique()))
-        return
 
-    # check that there are none zero values in cases
-        # if start == None:
     first_date2 = next((ti['dates'] for ind, ti in temp.iterrows() if ti['cases'] > limit), None)
+    
     if first_date2 == None:
-        print('no cumulative cases over the limit %f for country '%limit, country)
+        #print('no cumulative cases over the limit %f for country '%limit, country)
         return
+    
     if not(start is None):
         first_date2 = max(start, first_date2)
-    # country = 'Finland'  # Italy
+    
     temp = temp[temp.dates>= first_date2]
     if end is None:
         end = temp.dates.max()
-        print('date range with non-zero data: \n', first_date2, '-', end)
+        #print('date range with non-zero data: \n', first_date2, '-', end)
     else:
-        print('date range with non-zero data: \n', first_date2, '-', end)
+        #print('date range with non-zero data: \n', first_date2, '-', end)
         temp = temp[temp.date <= end]
 
-    fig, ax = plt.subplots()
-    plt.plot_date(temp.dates, temp.cases.cumsum().values, 'o-', label='cases')
-    plt.plot_date(temp.dates, temp.deaths.cumsum().values, 'o-', label='deaths')
+    fig, ax = plt.subplots(figsize=[12, 8])
+    plt.plot_date(temp.dates, temp.cases.cumsum().values, '', linewidth=3.5, label='cases', color='#005082', alpha=.5)
+    plt.plot_date(temp.dates, temp.deaths.cumsum().values, '', linewidth=3, label='deaths', color='#FF1053', alpha=.5)
+
+
     if log == "log":
         ax.set_yscale('log')
 
     fig.autofmt_xdate()
     ax.xaxis.set_major_locator(ticker.AutoLocator())
     ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
-    ax.xaxis.set_tick_params(rotation=30, labelsize=10)
-    plt.title(country+' Cases and Deaths')
+    ax.xaxis.set_tick_params(labelsize=10)
+    plt.title(country + ': Cases and Deaths', fontsize=20)
+    plt.xlabel('', fontsize=12, labelpad=8)
+    plt.ylabel('total', fontsize=12, labelpad=8)
     plt.legend()
+
+    ax.tick_params(axis='both', which='major', pad=8)
+
+    sns.despine()
 
     return first_date2 if first_date2 is not None else None
