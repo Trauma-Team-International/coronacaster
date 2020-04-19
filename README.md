@@ -8,7 +8,7 @@
   <a href="#what">what?</a> •
   <a href="#why">why?</a> •
   <a href="#how">how?</a> •
-  <a href="#start-simulating">start simulating</a> •
+  <a href="#start-forecasting">start forecasting</a> •
   <a href="https://autonom.io">About Autonomio</a> •
   <a href="https://github.com/autonomio/ICUSIM/issues">Issues</a> •
   <a href="#License">License</a>
@@ -27,9 +27,9 @@ ICUSIM dramatically simplifies the process ICU demand, capacity, and fatality si
 - Input parameter ranges are based on empirical evidence
 - There is no ambiquity in terms of results
 
-**Fig 1:** An example of simulation result where we test how often peak daily demand for standard ICU capacity stays below 278 (the official forecast of THL in Finland). 
+**Fig 1:** An example of forecasting result where we predict daily cases in Finland.
 
-<img src=https://media.discordapp.net/attachments/696359200774684745/698103055803220019/9jMw10xwcwAAAABJRU5ErkJggg.png>
+<img src=https://raw.githubusercontent.com/autonomio/coronacaster/master/assets/coronacaster_experiment_plot.png>
 
 This allows the consumer of the information to establish their own point-of-view regarding how likely a certain outcome may be. The Monte Carlo method entirely takes away doubt from the question "given a range of parameters, how often so and so values appear".
 
