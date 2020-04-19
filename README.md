@@ -22,16 +22,22 @@ Coronacast is a probabilistic programming method for time-series forecasting of 
 
 ### What?
 
-ICUSIM dramatically simplifies the process ICU demand, capacity, and fatality simulation. The simulation is based on a logic that closely resembles the current empirical understanding of the problem. The power of Monte Carlo simulation can be summarized in two points: 
 
-- Input parameter ranges are based on empirical evidence
-- There is no ambiquity in terms of results
+# Bayesian fitting and evaluation of the fit - plots the results
+# for daily new cases counts
+# can first plot the country data in logarithmic or linear scale to identify right datarange plot_country()
+# the fitting routine is fit_mc() - one parameter is the modeltype
+# which is either exponential "exp" or polynomial "polyN" where N is the number for the order of the polynomial to fit
+
+Coronacaster is an easy-to-use interface for performing a bayesian experiment to predict COVID-19 cases in any country. Typically you will follow three simple steps:
+
+1) Plot country's cases and deaths as reference
+2) Choose your model; `exp` or `polyN` (e.g. `poly1` for first order polynomial function)
+3) Perform the experiment and review the results 
 
 **Fig 1:** An example of forecasting result where we predict daily cases in Finland.
 
 <img src=https://raw.githubusercontent.com/autonomio/coronacaster/master/assets/coronacaster_experiment_plot.png>
-
-This allows the consumer of the information to establish their own point-of-view regarding how likely a certain outcome may be. The Monte Carlo method entirely takes away doubt from the question "given a range of parameters, how often so and so values appear".
 
 <hr>
 
