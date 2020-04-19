@@ -85,84 +85,34 @@ name | type | description
 
 Released version:
 
-#### `pip install icusim`
+#### `pip install coronacaster`
 
 Daily development version:
 
-#### `pip install git+https://github.com/autonomio/ICUSIM`
+#### `pip install git+https://github.com/autonomio/coronacaster`
 
 <hr>
 
-### Start Simulating
+### Start Forecasting
 
 To run a simulation, you need two things:
 
-- parameter dictionary
-- `icusim.MonteCarlo()` command
-
-Make sure to follow parameter ranges that you can established with available empirical evidence. A fully functional example that is relevant for Finland is provided below. You can simply change the values to meet the evidence for the area/s of your interest.
+- time-series data
+- `coronacaster.forecast()` command
 
 ```
-params = {'initial_patient_count': 80,
-          'days_to_simulate': 50,
-          'total_capacity_min': 200,
-          'total_capacity_max': 1000,
-          'ventilated_icu_share_min': .4,
-          'ventilated_icu_share_max': .6,
-          'standard_cfr_min': 0.2,
-          'standard_cfr_max': 0.6,
-          'ventilated_cfr_min': 1.3,
-          'ventilated_cfr_max': 1.7,
-          'standard_duration_min': 8.5,
-          'standard_duration_max': 25.5,
-          'ventilated_duration_factor_min': .9,
-          'ventilated_duration_factor_max': 1.1,
-          'doubles_in_days_min': 2.0,
-          'doubles_in_days_max': 12.0,
-          'ventilation_rate_min': 0.3,
-          'ventilation_rate_max': 0.8}
-```
-Next you can start the simulation: 
+import coronacaster
 
-```
-import icusim
-results = icusim.MonteCarlo(rounds=1000, param_dict=params)
+data = coronacaster.get_data_from_eu()
+coronacaster.forecast('Finland', data, startdate='2020-04-01')
 ```
 
-Access the results of the simulation: 
+As a reference, plot the country's data: 
 
 ```
-results.df
+coronacaster.plot_country('Finland', data)
 ```
 
-If you want to also perform **sensitivity analysis**: 
-
-```
-import icusim
-results = icusim.SobolSensitivity(rounds=1000, params)
-```
-
-Once the rounds are completed, get the sensitivities: 
-
-```
-results.sensitivity('metric_name')
-```
-
-
-You can also run a single round simulation with **daily output**: 
-
-```
-import icusim
-
-params = icusim.params()
-icusim.simulate(params)
-```
-
-Draw a **histogram** for analyzing the results:
-
-```
-astetik.hist(df, 'ventilated_icu_total_demand')
-```
 <hr>
 
 ### 💬 How to get Support
@@ -179,9 +129,9 @@ astetik.hist(df, 'ventilated_icu_total_demand')
 
 ### 📢 Citations
 
-If you use ICUSIM for published work, please cite:
+If you use CoronaCaster for published work, please cite:
 
-`Autonomio's ICUSIM [Computer software]. (2020). Retrieved from http://github.com/autonomio/ICUSIM.`
+`Autonomio's CoronaCaster [Computer software]. (2020). Retrieved from http://github.com/autonomio/ICUSIM.`
 
 <hr>
 
@@ -189,6 +139,6 @@ If you use ICUSIM for published work, please cite:
 
 [MIT License](https://github.com/autonomio/talos/blob/master/LICENSE)
 
-[github issue tracker]: https://github.com/automio/talos/issues
+[github issue tracker]: https://github.com/automio/coronacaster/issues
 [discord chat]: https://discord.gg/55QDD9
 
