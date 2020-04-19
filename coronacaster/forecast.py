@@ -1,11 +1,11 @@
-def fit(country,
-        data,
-        ftype='poly1',
-        samples=10000,
-        startdate=None,
-        enddate=None,
-        limit=0,
-        **kwargs):
+def forecast(country,
+             data,
+             ftype='poly1',
+             samples=10000,
+             startdate=None,
+             enddate=None,
+             limit=0,
+             **kwargs):
     
     """
     do monte carlo fit of posterior (gives also the point max estimate)
