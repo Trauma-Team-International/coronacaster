@@ -37,47 +37,30 @@ This allows the consumer of the information to establish their own point-of-view
 
 ### Why?
 
-- Make forecasts to increase preparadness
-- Test plausibility of forecasts made with other methods
+There are very few reasonable forecasting methods for COVID-19 cases that are 100% based on what has actually happened and where validation is built-in. 
 
 <hr>
 
 ### How?
 
-ICUSIM follows a straightforward logic:
+coronacaster follows a straightforward logic:
 
-- There is a certain number of patients to start with
-- Patients are split between standard and ventilated ICU
-- Patients can not move between standard and ventilated ICU
-- New patients come in based on `doubles_in_days` input parameter
-- As new patients come in, each is assigned with a probability to survive
-- As new patients come in, each is assigned a stay duration
-- Released or dead, it happens when stay duration is completed
-- If there is less capacity than there is demand, patients will die accordingly
+- Data consist of cases and deaths for all countries from 1st of January, 2020
+- An option between exponential and polynomial functions is provided
+- Many countries yield meaningful results
 
-Outcomes are controlled through **Input Parameters**, which are provided separately for _standard ICU_ and _ventilated ICU_.
+The `coronacaster.forecast()` command accepts the following parameters:
 
 name | type | description
 --- | --- | --- 
-`initial_patient_count` | int | the number of patients to start with
-`days_to_simulate` | int | number of days to simulate
-`total_capacity_min` | int | minimum for total available capacity
-`total_capacity_max` | int | maximum for total available capacity
-`ventilated_icu_share_min` | float | minimum for ventilated capacity
-`ventilated_icu_share_max` | float | maximum for ventilated capacity
-`standard_cfr_min` | float | minimum case fatality rate for standard ICU
-`standard_cfr_max` | float | maximum case fatality rate for standard ICU
-`ventilated_cfr_min` | float | minimum case fatality rate for ventilated ICU
-`ventilated_cfr_max` | float | maximum case fatality rate for ventilated ICU
-`standard_duration_min` | float | minimum mean duration for standard ICU stay
-`standard_duration_max` | float | maximum mean duration for standard ICU stay
-`ventilated_duration_factor_min` | float | minimum ratio for ventilated capacity per standard standard 
-`ventilated_duration_factor_max` | float | maximum ratio for ventilated capacity per standard standard 
-`doubles_in_days_min` | float | minimum number of days it takes for exponental growth to happen 
-`doubles_in_days_max` | float | maximum number of days it takes for eponental growth to happen
-`ventilation_rate_min` | float | minimum rate at which ventilation is required
-`ventilation_rate_max` | float | maximum rate at which ventilation is required
-`show_params` | bool | prints out the parameters if True
+`country` | str | Country name, if there is "countries" column in the data - else use "World or "" for all data
+`data` | DataFrame | dataframe with "dates" (datetime) and "cases" columns - coses is the number of daily new cases
+`ftype` | str | 'polyN' where N is a number between 0 and a few (don't try more than 10 or so - becomes quite slow) or  'exp'  for exponential
+`samples` | int | number of samples to use
+`startdate` | str | start date number
+`enddate` | str | end date number
+`limit` | int | take start date to be where cumulative count exceeds limit
+`**kwargs` | float | model params if wanted to use (see models.py)
 
 <hr>
 
@@ -85,84 +68,34 @@ name | type | description
 
 Released version:
 
-#### `pip install icusim`
+#### `pip install coronacaster`
 
 Daily development version:
 
-#### `pip install git+https://github.com/autonomio/ICUSIM`
+#### `pip install git+https://github.com/autonomio/coronacaster`
 
 <hr>
 
-### Start Simulating
+### Start Forecasting
 
 To run a simulation, you need two things:
 
-- parameter dictionary
-- `icusim.MonteCarlo()` command
-
-Make sure to follow parameter ranges that you can established with available empirical evidence. A fully functional example that is relevant for Finland is provided below. You can simply change the values to meet the evidence for the area/s of your interest.
+- time-series data
+- `coronacaster.forecast()` command
 
 ```
-params = {'initial_patient_count': 80,
-          'days_to_simulate': 50,
-          'total_capacity_min': 200,
-          'total_capacity_max': 1000,
-          'ventilated_icu_share_min': .4,
-          'ventilated_icu_share_max': .6,
-          'standard_cfr_min': 0.2,
-          'standard_cfr_max': 0.6,
-          'ventilated_cfr_min': 1.3,
-          'ventilated_cfr_max': 1.7,
-          'standard_duration_min': 8.5,
-          'standard_duration_max': 25.5,
-          'ventilated_duration_factor_min': .9,
-          'ventilated_duration_factor_max': 1.1,
-          'doubles_in_days_min': 2.0,
-          'doubles_in_days_max': 12.0,
-          'ventilation_rate_min': 0.3,
-          'ventilation_rate_max': 0.8}
-```
-Next you can start the simulation: 
+import coronacaster
 
-```
-import icusim
-results = icusim.MonteCarlo(rounds=1000, param_dict=params)
+data = coronacaster.get_data_from_eu()
+coronacaster.forecast('Finland', data, startdate='2020-04-01')
 ```
 
-Access the results of the simulation: 
+As a reference, plot the country's data: 
 
 ```
-results.df
+coronacaster.plot_country('Finland', data)
 ```
 
-If you want to also perform **sensitivity analysis**: 
-
-```
-import icusim
-results = icusim.SobolSensitivity(rounds=1000, params)
-```
-
-Once the rounds are completed, get the sensitivities: 
-
-```
-results.sensitivity('metric_name')
-```
-
-
-You can also run a single round simulation with **daily output**: 
-
-```
-import icusim
-
-params = icusim.params()
-icusim.simulate(params)
-```
-
-Draw a **histogram** for analyzing the results:
-
-```
-astetik.hist(df, 'ventilated_icu_total_demand')
-```
 <hr>
 
 ### 💬 How to get Support
@@ -179,9 +112,9 @@ astetik.hist(df, 'ventilated_icu_total_demand')
 
 ### 📢 Citations
 
-If you use ICUSIM for published work, please cite:
+If you use CoronaCaster for published work, please cite:
 
-`Autonomio's ICUSIM [Computer software]. (2020). Retrieved from http://github.com/autonomio/ICUSIM.`
+`Autonomio's CoronaCaster [Computer software]. (2020). Retrieved from http://github.com/autonomio/ICUSIM.`
 
 <hr>
 
@@ -189,6 +122,6 @@ If you use ICUSIM for published work, please cite:
 
 [MIT License](https://github.com/autonomio/talos/blob/master/LICENSE)
 
-[github issue tracker]: https://github.com/automio/talos/issues
+[github issue tracker]: https://github.com/automio/coronacaster/issues
 [discord chat]: https://discord.gg/55QDD9
 
