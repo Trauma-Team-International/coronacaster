@@ -6,13 +6,13 @@ Coronacast provides a simple interface for performing time-series forecasting
 for COVID-19 cases using bayesian models.
 """
 
-DISTNAME = 'Coronacaster'
+DISTNAME = 'coronacaster'
 MAINTAINER = 'Mikko Kotila'
 MAINTAINER_EMAIL = 'mailme@mikkokotila.com'
 URL = 'http://autonom.io'
 LICENSE = 'MIT'
 DOWNLOAD_URL = 'https://github.com/autonomio/coronacast/'
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 try:
     from setuptools import setup
