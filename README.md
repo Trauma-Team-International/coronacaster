@@ -4,8 +4,6 @@
   <br>
 </h1>
 
-<h3 align="center">Intensive Care Unit Simulation</h3>
-
 <p align="center">
   <a href="#what">what?</a> •
   <a href="#why">why?</a> •
