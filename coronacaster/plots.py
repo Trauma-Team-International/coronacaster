@@ -21,7 +21,9 @@ def plot_country(country, data, log='lin', end=None, start=None, limit=0):
     else:
         temp = data[data.countries == country].sort_values('dates')
 
-    first_date2 = next((ti['dates'] for ind, ti in temp.iterrows() if ti['cases'] > limit), None)
+    temp['cumcases']=temp.cases.cumsum().values
+    temp['cumdeaths']=temp.deaths.cumsum().values
+    first_date2 = next((ti['dates'] for ind, ti in temp.iterrows() if ti['cumcases'] > limit), None)
     
     if first_date2 == None:
         #print('no cumulative cases over the limit %f for country '%limit, country)
@@ -39,8 +41,8 @@ def plot_country(country, data, log='lin', end=None, start=None, limit=0):
         temp = temp[temp.date <= end]
 
     fig, ax = plt.subplots(figsize=[12, 8])
-    plt.plot_date(temp.dates, temp.cases.cumsum().values, '', linewidth=3.5, label='cases', color='#005082', alpha=.5)
-    plt.plot_date(temp.dates, temp.deaths.cumsum().values, '', linewidth=3, label='deaths', color='#FF1053', alpha=.5)
+    plt.plot_date(temp.dates, temp.cumcases.values, '', linewidth=3.5, label='cases', color='#005082', alpha=.5)
+    plt.plot_date(temp.dates, temp.cumdeaths.values, '', linewidth=3, label='deaths', color='#FF1053', alpha=.5)
 
 
     if log == "log":
@@ -59,4 +61,4 @@ def plot_country(country, data, log='lin', end=None, start=None, limit=0):
 
     sns.despine()
 
-    return first_date2 if first_date2 is not None else None
+    return first_date2
