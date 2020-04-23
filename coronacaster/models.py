@@ -1,4 +1,4 @@
-def exp_model(x, y, expo=[0.7, 2], slope=[5, 10], intercept=[0, 30], sigma0=20):
+def exp_model(x, y, expo=[0.2, 1], slope=[5, 10], intercept=[0, 30], sigma0=20):
     """
     likelihood function is y = intercept + slope * exp( x * exponent)
     :param x: datapoints
@@ -35,6 +35,49 @@ def exp_model(x, y, expo=[0.7, 2], slope=[5, 10], intercept=[0, 30], sigma0=20):
 
     modelfun = lambda x1, y1: x1[0] + x1[1] * np.exp(x1[2] * y1)  # y is data
     return exp_m, varnames, modelfun
+
+
+def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.5, 0.2], intercept=[0, 30], sigma0=20):
+    """
+    Logistic model (S-curve, simpler sigmoid function)
+    likelihood function is y = intercept + L /(1 + exp( -k * x - x0 ))
+    :param x: datapoints
+    :param y:  data
+    :param peak:  maximum value [mu and sigma]
+    :param shifted: determines the point of steepest rise
+    :param expo: k
+    :param intercept: constant variable
+    :param sigma0: the variation of the result
+    :return:  returns the model to fit_mc() and list of model parameter names as strings and model function
+    """
+    #print('Logistic fit \n args: intercept, peak, shift, expo')
+
+    import pymc3 as pm
+    import numpy as np
+
+    with pm.Model() as logistic_m:  # or exp_model = pm.Model()
+        # model y ~ theta_1/(1+ exp(-theta_2*x - theta_3) ) + theta_4
+
+        # Intercept  - theta_4
+        intercept = pm.Normal('intercept', mu=intercept[0], sd=intercept[1])
+        # Peak   - theta_1
+        peak = pm.Normal('peak', mu=peak[0], sd=peak[1])
+        # Exponent  - theta_2
+        expo = pm.Normal('expo', mu=expo[0], sd=expo[1])
+        # Shift - theta_3
+        shifted = pm.Normal('shifted', mu=shifted[0], sd=shifted[1])
+        # Estimate of mean
+        mean = peak / ( 1 + np.exp( -expo * x - shifted) ) + intercept
+
+        # Standard deviation
+        sigma = pm.HalfNormal('sigma', sd=sigma0)
+        # Observed values
+        Y_obs = pm.Normal('Y_obs', mu=mean, sd=sigma, observed=y)
+
+    varnames = ['intercept', 'peak', 'expo', 'shifted']
+
+    modelfun = lambda x1, y1: x1[0] + x1[1] /(1+  np.exp( -x1[2] * y1 - x1[3] ) )  # y is data
+    return logistic_m, varnames, modelfun
 
 
 # noinspection PyIncorrectDocstring
