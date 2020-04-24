@@ -86,6 +86,7 @@ def forecast(country,
     elif 'logis' in ftype or 'scurve' in ftype or 'sigmoid' in ftype:
         peak0 = y.max() * 1.5
         peak = [peak0, peak0 / 3]
+        shifted = [x[temp.cases.idxmax()], x.max() / 5]
         model, varnames, modelfun = logistic_model(x, y, intercept=intercept, peak=peak, **kwargs)
 
     else:

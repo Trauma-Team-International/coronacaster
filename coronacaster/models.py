@@ -37,7 +37,7 @@ def exp_model(x, y, expo=[0.2, 1], slope=[5, 10], intercept=[0, 30], sigma0=20):
     return exp_m, varnames, modelfun
 
 
-def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.5, 0.2], intercept=[0, 30], sigma0=20):
+def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.3, 0.1], intercept=[0, 30], sigma0=20):
     """
     Logistic model (S-curve, simpler sigmoid function)
     likelihood function is y = intercept + L /(1 + exp( -k * x - x0 ))
@@ -56,7 +56,7 @@ def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.5, 0.2], in
     import numpy as np
 
     with pm.Model() as logistic_m:  # or exp_model = pm.Model()
-        # model y ~ theta_1/(1+ exp(-theta_2*x - theta_3) ) + theta_4
+        # model y ~ theta_1/(1+ exp(-theta_2*x +theta_2*theta_3) ) + theta_4
 
         # Intercept  - theta_4
         intercept = pm.Normal('intercept', mu=intercept[0], sd=intercept[1])
@@ -67,7 +67,7 @@ def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.5, 0.2], in
         # Shift - theta_3
         shifted = pm.Normal('shifted', mu=shifted[0], sd=shifted[1])
         # Estimate of mean
-        mean = peak / ( 1 + np.exp( -expo * x - shifted) ) + intercept
+        mean = peak / ( 1 + np.exp( -expo * x + expo * shifted ) ) + intercept
 
         # Standard deviation
         sigma = pm.HalfNormal('sigma', sd=sigma0)
@@ -76,7 +76,7 @@ def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.5, 0.2], in
 
     varnames = ['intercept', 'peak', 'expo', 'shifted']
 
-    modelfun = lambda x1, y1: x1[0] + x1[1] /(1+  np.exp( -x1[2] * y1 - x1[3] ) )  # y is data
+    modelfun = lambda x1, y1: x1[0] + x1[1] /(1+  np.exp( -x1[2] * y1  + x1[2] * x1[3] ) )  # y is data
     return logistic_m, varnames, modelfun
 
 
