@@ -23,7 +23,8 @@ except ImportError:
 install_requires = ['pymc3',
                     'matplotlib',
                     'pandas',
-                    'numpy']
+                    'numpy',
+                    'xlrd']
 
 if __name__ == "__main__":
 
