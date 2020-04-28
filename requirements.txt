@@ -1,4 +1,4 @@
-'pymc3'
-'matplotlib'
-'pandas'
-'numpy'
+pymc3
+matplotlib
+pandas
+numpy
