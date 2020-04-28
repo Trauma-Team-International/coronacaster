@@ -29,7 +29,7 @@ def forecast(country,
     import datetime
     import pandas as pd
 
-    from .utils import calculateStats, modelfit_eval
+    from .utils import calculateStats, modelfit_eval_dates
     from .models import poly_model, exp_model, logistic_model
     
     if isinstance(startdate, str):
