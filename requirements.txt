@@ -2,3 +2,4 @@ pymc3
 matplotlib
 pandas
 numpy
+xlrd
