@@ -22,6 +22,7 @@ except ImportError:
 
 install_requires = ['pymc3',
                     'matplotlib',
+                    'seaborn',
                     'pandas',
                     'numpy',
                     'xlrd']
