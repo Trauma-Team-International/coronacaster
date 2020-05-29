@@ -6,7 +6,7 @@ def exp_model(x, y, expo=[0.2, 1], slope=[5, 10], intercept=[0, 30], sigma0=20):
     :param expo:  exponent [mu and sigma]
     :param slope:
     :param intercept:
-    :param sigma0: the variation of the result
+    :param sigma0: the general variation of the result
     :return:  returns the model to fit_mc() and list of model parameter names as strings and model function
     """
     #print('Exponential fit \n args: intercept, slope, expo')
@@ -40,14 +40,14 @@ def exp_model(x, y, expo=[0.2, 1], slope=[5, 10], intercept=[0, 30], sigma0=20):
 def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.3, 0.1], intercept=[0, 30], sigma0=20):
     """
     Logistic model (S-curve, simpler sigmoid function)
-    likelihood function is y = intercept + L /(1 + exp( -k * x - x0 ))
+    likelihood function is y = intercept + L /(1 + exp( -k * (x - x0) ) )
     :param x: datapoints
     :param y:  data
     :param peak:  maximum value [mu and sigma]
     :param shifted: determines the point of steepest rise
     :param expo: k
-    :param intercept: constant variable
-    :param sigma0: the variation of the result
+    :param intercept:
+    :param sigma0: the general variation of the result
     :return:  returns the model to fit_mc() and list of model parameter names as strings and model function
     """
     #print('Logistic fit \n args: intercept, peak, shift, expo')
@@ -64,7 +64,7 @@ def logistic_model(x, y, peak=[2e5, 1.8e5], shifted=[20, 8], expo=[0.3, 0.1], in
         peak = pm.Normal('peak', mu=peak[0], sd=peak[1])
         # Exponent  - theta_2
         expo = pm.Normal('expo', mu=expo[0], sd=expo[1])
-        # Shift - theta_3
+        # Shifted - theta_3
         shifted = pm.Normal('shifted', mu=shifted[0], sd=shifted[1])
         # Estimate of mean
         mean = peak / ( 1 + np.exp( -expo * x + expo * shifted ) ) + intercept
@@ -95,6 +95,7 @@ def poly_model(x, y, order, intercept=[0, 20], sigma0=30, **kwargs):
     :param a2: second order multiplier [mu, sigma]
     ...
     :param aN: Nth order multiplier [mu, sigma]
+    :param sigma0: general variation
     :return: returns the model to fit_mc()  and list of model parameter names as strings and model function
     """
 
@@ -112,11 +113,8 @@ def poly_model(x, y, order, intercept=[0, 20], sigma0=30, **kwargs):
             exec('%s = [%f, %f]'%(aN, argvals[-1][0], argvals[-1][1]))
         else:
             argvals.append(isinargs)
-        # print(aN, '=', argvals[-1])
-
 
     '''
-
     if order == 1:
         print('1st-order polynomial fit \n args: intercept,', args)
     elif order == 0:
@@ -125,7 +123,6 @@ def poly_model(x, y, order, intercept=[0, 20], sigma0=30, **kwargs):
         print('2nd-order polynomial fit \n args: intercept', args)
     else:
         print('%dth-order polynomial fit \n args: intercept,'%order, args)
-
     '''
 
     with pm.Model() as poly_m:  # or exp_model = pm.Model()
