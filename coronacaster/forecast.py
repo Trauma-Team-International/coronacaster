@@ -7,6 +7,9 @@ def forecast(country,
              limit=0,
              intercept=[0,25],
              targetdate=None,
+             tune=2000,
+             chains=20,
+             cpu_cores=4,
              **kwargs):
     
     """
@@ -94,7 +97,7 @@ def forecast(country,
 
     with model:
         step = pm.Slice()
-        trace = pm.sample(samples, step=step, tune=2000)  # , step, tune=2500, cores=10)
+        trace = pm.sample(samples, step=step, tune=tune, chains=chains, cores=cpu_cores)  # , step, tune=2500, cores=10)
 
     varstats = []
     for va in varnames + ['sigma']:
