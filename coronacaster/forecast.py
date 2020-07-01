@@ -5,8 +5,8 @@ def forecast(country,
              startdate=None,
              enddate=None,
              limit=0,
-             intercept=[0,25],
              targetdate=None,
+             return_inis=False,
              **kwargs):
     
     """
@@ -17,10 +17,13 @@ def forecast(country,
     :param ftype:  'polyN' where N is a number between 0 and a few (don't try more than 10 or so - becomes quite slow)
                 or  'exp'  for exponential
     :param samples: number of samples to use
-    :param startdate: start date number
-    :param enddate: end date number
+    :param startdate: start date of the data to use as datetime.date
+    :param enddate: end date of the data to use as datetime.date
     :param limit: take start date to be where cumulative count exceeds limit
-    :param targetdate: date number for prediction
+    :param targetdate: datetime.date for prediction
+        import datetime
+        targetdate = datetime.datetime.strptime('2020-06-30','%Y-%m-%d').date()
+    :param return_inis: don't run but return initial parameters
     :param **kwargs: model params if wanted to use like intercept=[int_mean,int_std]
     :return: fitresults
     """
@@ -52,9 +55,10 @@ def forecast(country,
         enddate = temp[temp.cases > 0].dates.dt.date.max()
     
     temp_new = temp[(temp.dates.dt.date>=startdate) & (temp.dates.dt.date<=enddate)]
-    if intercept[0]==0:
-        intercept[0] = temp_new.cumcases.values.min()
-        intercept[1] = intercept[0]/20 + 20
+    intercept = next((value for key, value in kwargs.items() if key == 'intercept'), None)
+    if intercept is None:
+        intercept = temp_new.cumcases.values.min()
+        kwargs['intercept'] = [intercept, intercept / 10 + 20]
 
     try:
         x0 = temp_new.dates.dt.date - startdate
@@ -72,23 +76,36 @@ def forecast(country,
     log = 'lin'
     
     if ftype=='exp':
-        a10 = (y.max() - y[0]) / x.max()
-        slope = [a10, a10 / 3 + 10]
-        model, varnames, modelfun = exp_model(x, y, intercept=intercept, **kwargs)
+        slope = next((value for key, value in kwargs.items() if key == 'slope'), None)
+        if slope is None:
+            a10 = (y.max() - y[0]) / x.max()
+            kwargs['slope'] = [a10 / 2, a10 / 4 + 10]
+        if return_inis:
+            return kwargs
+        model, varnames, modelfun = exp_model(x, y, **kwargs)
         log = 'log'
     
     elif 'poly' in ftype:
         order = int(ftype[4:])
-        a10=(y.max() - y[0]) / x.max()
-        a1=[a10, a10 / 3 + 20]
-        model, varnames, modelfun = poly_model(x, y, order, intercept=intercept, a1=a1, **kwargs)
+        a1 = next((value for key, value in kwargs.items() if key == 'a1'), None)
+        if not a1:
+            a10 = (y.max() - y[0]) / x.max()
+            kwargs['a1'] = [a10, a10 / 4 + 20]
+        if return_inis:
+            return kwargs
+        model, varnames, modelfun = poly_model(x, y, order, **kwargs)
 
     elif 'logis' in ftype or 'scurve' in ftype or 'sigmoid' in ftype:
-        peak0 = y.max() * 1.5
-        peak = [peak0, peak0 / 3]
-        shifted = [x[temp.cases.idxmax()], x.max() / 5]
-        model, varnames, modelfun = logistic_model(x, y, intercept=intercept, peak=peak, **kwargs)
-
+        peak = next((value for key, value in kwargs.items() if key == 'peak'), None)
+        if peak is None:
+            peak0 = y.max() * 1.5
+            kwargs['peak'] = [peak0, peak0 / 4]
+        shifted = next((value for key, value in kwargs.items() if key == 'shifted'), None)
+        if shifted is None:
+            kwargs['shifted'] = [x[temp.cases.idxmax()], x.max() / 5]
+        if return_inis:
+            return kwargs
+        model, varnames, modelfun = logistic_model(x, y, **kwargs)
     else:
         return None
 
