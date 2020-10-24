@@ -12,7 +12,7 @@ MAINTAINER_EMAIL = 'mailme@mikkokotila.com'
 URL = 'http://autonom.io'
 LICENSE = 'MIT'
 DOWNLOAD_URL = 'https://github.com/autonomio/coronacast/'
-VERSION = '0.0.3'
+VERSION = '0.1.0'
 
 try:
     from setuptools import setup
