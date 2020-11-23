@@ -113,7 +113,7 @@ coronacaster.plot_country('Finland', data)
 
 If you use CoronaCaster for published work, please cite:
 
-`Autonomio's CoronaCaster [Computer software]. (2020). Retrieved from http://github.com/autonomio/ICUSIM.`
+`Autonomio's CoronaCaster [Computer software]. (2020). Retrieved from https://github.com/autonomio/coronacaster`
 
 <hr>
 
